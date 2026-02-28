@@ -131,6 +131,42 @@ npm run dev    # starts on port 3001
 
 ---
 
+## Deployment
+
+The app is deployed on Vercel at **[https://ai-task-manager-app.vercel.app/](https://ai-task-manager-app.vercel.app/)**.
+
+### Deploy to Vercel
+
+1. **Push to GitHub** — Vercel auto-deploys on every push to `main`.
+
+2. **Set environment variables** in the Vercel dashboard under **Settings → Environment Variables**:
+
+   | Variable | Description |
+   |----------|-------------|
+   | `DATABASE_URL` | Neon PostgreSQL connection string |
+   | `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+   | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+   | `GEMINI_API_KEY` | Google Gemini API key |
+   | `AUTH_SECRET` | Random secret for NextAuth (generate with `openssl rand -hex 32`) |
+   | `MCP_API_KEY` | Shared key for MCP server → API auth |
+   | `NEXTAUTH_URL` | Set to `https://ai-task-manager-app.vercel.app` |
+
+3. **Google OAuth redirect URI** — Add the following to your Google Cloud OAuth 2.0 credentials' authorized redirect URIs:
+   ```
+   https://ai-task-manager-app.vercel.app/api/auth/callback/google
+   ```
+
+4. **Run database migrations** against your Neon database (one-time, from local):
+   ```bash
+   npx prisma migrate deploy
+   ```
+
+5. **Prisma client** is auto-generated during the Vercel build via the `postinstall` script (`prisma generate`). No manual step required.
+
+> **Note:** The MCP server (`mcp-server/`) is a standalone Node.js process and is **not** deployed to Vercel. Run it separately on a long-lived server or locally.
+
+---
+
 ## Getting Started
 
 ### Prerequisites
