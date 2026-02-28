@@ -1,15 +1,18 @@
 import { PrismaClient } from "@/app/generated/prisma";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
-import path from "path";
-
-const dbPath = path.join(process.cwd(), "dev.db");
-const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
+import { PrismaNeon } from "@prisma/adapter-neon";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const prisma =
-  globalForPrisma.prisma ?? new PrismaClient({ adapter, log: ["query"] });
+function createPrismaClient(): PrismaClient {
+  const adapter = new PrismaNeon({
+    connectionString: process.env.DATABASE_URL!,
+  });
+  return new PrismaClient({ adapter });
+}
+
+export const prisma: PrismaClient =
+  globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
