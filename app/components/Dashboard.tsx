@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import TaskList from "./TaskList";
 import TaskForm from "./TaskForm";
 import AIChat from "./AIChat";
+import WeeklySummary from "./WeeklySummary";
 
 type Task = {
   id: number;
@@ -43,14 +44,22 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <TaskForm onCreated={loadTasks} />
-      <TaskList
-        tasks={tasks}
-        onDelete={handleDelete}
-        onStatusChange={handleStatusChange}
-      />
-      <AIChat />
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Left Panel — AI */}
+      <div className="space-y-6">
+        <WeeklySummary />
+        <AIChat />
+      </div>
+
+      {/* Right Panel — Task Manager */}
+      <div className="space-y-6">
+        <TaskForm onCreated={loadTasks} />
+        <TaskList
+          tasks={tasks}
+          onDelete={handleDelete}
+          onStatusChange={handleStatusChange}
+        />
+      </div>
     </div>
   );
 }
