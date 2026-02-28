@@ -43,4 +43,7 @@ next-env.d.ts
 
 /app/generated/prisma
 
-/app/generated/prisma
+# SQLite databases (legacy, not used with Neon/PostgreSQL)
+*.db
+*.db-shm
+*.db-wal
